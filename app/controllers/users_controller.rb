@@ -31,16 +31,16 @@ class UsersController < ApplicationController
   end
 
   def update
-    the_id = params.fetch("modify_id")
-    matching_username = User.where({ :id => the_id})
-    a_new_user = matching_username.at(0)
-    
-    input_username = params.fetch("updated_username")
-    
-    a_new_user.username = input_username
+  the_id = params.fetch("modify_id")
+  matching_username = User.where({ :id => the_id})
+  the_user = matching_username.at(0)
 
-    a_new_user.save
+  input_username= params.fetch("updated_username")
 
-  redirect_to("/users/" + a_new_user.username.to_s)
+  the_user.username= input_username
+ 
+  the_user.save
+
+  redirect_to("/users/" + the_user.username.to_s)
   end
 end

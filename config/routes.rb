@@ -8,7 +8,7 @@ Rails.application.routes.draw do
 
   get("/add_user", { :controller => "users", :action =>"create"})
 
-  get("/update_user/:modify_id", { :controller => "users", :action =>"update"})
+  post("/update_user/:modify_id", { :controller => "users", :action =>"update"})
 
   get("/photos", { :controller => "photos", :action =>"index"})
 

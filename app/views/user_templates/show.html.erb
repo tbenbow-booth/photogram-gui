@@ -8,7 +8,7 @@
   <dt>Edit User</dt>
 
   <dd>
-  <form action="/update_user/<%= @the_user.username%>">
+  <form action="/update_user/<%= @the_user.username%>" method="post">
       <label for="browser_username">Username</label>
       <input id="browser_username" type="text" name="updated_username" value="<%= @the_user.username %>">
 
