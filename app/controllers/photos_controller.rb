@@ -1,83 +1,61 @@
 class PhotosController < ApplicationController
   def index
-    matching_photos = Photo.all
-    
-    @list_of_photos = matching_photos.order({ :created_at => :desc})
-
-    render({ :template => "photo_templates/index"})
+    @list_of_photos = Photo.all.order(created_at: :desc)
+    render(template: "photo_templates/index")
   end
 
   def show
-    #Parameters: {"path_id"=>"777"}
-    url_id = params.fetch("path_id")
+    my_photo_id = params.fetch("photo_id")
+    @the_photo = Photo.where(id: my_photo_id).first
 
-    matching_photos = Photo.where({ :id => url_id})
+    if @the_photo == nil
+      redirect_to("/404")
+    else
+      render(template: "photo_templates/show")
+    end
+  end
 
-    @the_photo = matching_photos.at(0)
-
-  render({ :template => "photo_templates/show"})
-  end 
-
-def baii
-
-  the_id = params.fetch("toast_id")
-
-  matching_photos = Photo.where({ :id => the_id})
-
-  the_photo = matching_photos.at(0)
-
-  the_photo.destroy
-
-  redirect_to("/photos")
-  #render({ :template => "photo_templates/baii"})
-  end 
+  def delete
+    my_photo_id = params.fetch("photo_id")
+    the_photo = Photo.where(id: my_photo_id).first
+    the_photo.destroy
+    # render(template: "photos_html/delete")
+    redirect_to("/photos")
+  end
 
   def create
-    input_image = params.fetch("query_image")
-    input_caption = params.fetch("query_caption")
-    input_owner_id = params.fetch("query_owner_id")
-
-    a_new_photo = Photo.new
-    a_new_photo.image = input_image
-    a_new_photo.caption = input_caption
-    a_new_photo.owner_id = input_owner_id
-
-    a_new_photo.save
-
-    redirect_to("/photos/" + a_new_photo.id.to_s)
-  #render({ :template => "photo_templates/create"})
+    image = params.fetch("input_image")
+    caption = params.fetch("input_caption")
+    owner_id = params.fetch("input_owner_id")
+    new_photo = Photo.new
+    new_photo.image = image
+    new_photo.caption = caption
+    new_photo.owner_id = owner_id
+    new_photo.save
+    # render(template: "photos_html/delete")
+    redirect_to("/photos/" + new_photo.id.to_s)
   end
 
   def update
-    the_id = params.fetch("modify_id")
-    matching_photos = Photo.where({ :id => the_id})
-    the_photo = matching_photos.at(0)
-
-    input_image = params.fetch("query_image")
-    input_caption = params.fetch("query_caption")
-
-    the_photo.image = input_image
-    the_photo.caption = input_caption
-
+    my_photo_id = params.fetch("photo_id")
+    caption = params.fetch("input_caption")
+    image = params.fetch("input_image")
+    the_photo = Photo.where(id: my_photo_id).first
+    the_photo.caption = caption
+    the_photo.image = image
     the_photo.save
-
-    redirect_to("/photos/" + the_photo.id.to_s)
-  #({ :template => "photo_templates/update"})
-  end 
+    redirect_to("/photos/" + my_photo_id)
+  end
 
   def comment
-    input_photo_id = params.fetch("query_photo_id")
-    input_author_id = params.fetch("query_author_id")
-    input_comment = params.fetch("query_comment")
-
-    a_new_comment = Comment.new
-    a_new_comment.photo_id = input_photo_id
-    a_new_comment.author_id = input_author_id
-    a_new_comment.body = input_comment
-
-    a_new_comment.save
-
-    redirect_to("/photos/" + a_new_comment.id.to_s)
-
+    input_photo_id = params.fetch("input_photo_id")
+    input_author_id = params.fetch("input_author_id")
+    input_comment = params.fetch("input_comment")
+    new_comment = Comment.new
+    new_comment.body = input_comment
+    new_comment.author_id = input_author_id
+    new_comment.photo_id = input_photo_id
+    new_comment.save
+    redirect_to("/photos/" + input_photo_id)
   end
 end
